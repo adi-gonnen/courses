@@ -3,8 +3,7 @@ import { ExerciseInput } from "../services/moduls";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import SelectExercise from "./SelectExercise";
 
@@ -14,6 +13,7 @@ interface ModalProps {
   onSelect: (id: string) => void;
   onClose: () => void;
   onScroll: () => void;
+  onSearch: (val: string) => void;
 }
 
 export default function EditExercise({
@@ -22,6 +22,7 @@ export default function EditExercise({
   onClose,
   onSelect,
   onScroll,
+  onSearch,
 }: ModalProps) {
   const [id, setId] = useState("");
 
@@ -30,9 +31,17 @@ export default function EditExercise({
       <Dialog open={true} onClose={onClose} className="select-dialog">
         <div className="dialog-title row justify-between mb-sm">
           <p>Exercise List</p>
-          <button onClick={onClose}>X</button>
+          <Button onClick={onClose}>X</Button>
         </div>
         <DialogContent className="exercise-container">
+          <TextField
+            label="search"
+            variant="outlined"
+            className="search-input"
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              onSearch(event.target.value);
+            }}
+          />
           <div className="exercise-body row wrap" onScroll={onScroll}>
             {exercises?.length &&
               exercises.map((exercise) => (

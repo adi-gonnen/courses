@@ -25,3 +25,8 @@ export interface UpdateExerciseInput {
     insert: boolean,
     order_in_day: number
 }
+
+export interface SearchInput {
+    search:string,
+    idx: number
+}

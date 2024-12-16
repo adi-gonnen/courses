@@ -2,19 +2,27 @@ import { useState, useEffect, useCallback } from "react";
 import { CourseInput, DaysInput, ExerciseInput } from "../services/moduls";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store/index";
-import { getCourses, getExercises, updateExercise } from "../store/courseSlice";
+import {
+  getCourses,
+  getExercises,
+  updateExercise,
+  getFilterExercises,
+} from "../store/courseSlice";
 import DaysList from "./DaysList";
 import EditExercise from "./EditExerciseModal";
+import { debounce } from "lodash";
 
 function CourseController() {
   const dispatch = useDispatch<AppDispatch>();
-  const { days, exercises } = useSelector((state: RootState) => state.course);
+  const { days, exercises, filterExercises } = useSelector(
+    (state: RootState) => state.course
+  );
 
-  const [listIdx, setListIdx] = useState(0);
+  const [listIdx, setListIdx] = useState(20);
   const [selected, setSelected] = useState(null);
   const [selectIdx, setSelectIdx] = useState("");
   const [dayIdx, setDayIdx] = useState("");
-  const [exerciseList, setExerciseList] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     dispatch(getCourses());
@@ -25,18 +33,21 @@ function CourseController() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (exercises?.length === exerciseList.length) {
-      return;
-    }
-    if (exercises) {
-      let lastIdx = listIdx + 20;
-      if (lastIdx > exercises.length) {
-        lastIdx = exercises.length;
-      }
-      const sliceList = exercises.slice(listIdx, lastIdx);
-      setExerciseList([...exerciseList, ...sliceList]);
-    }
-  }, [listIdx, exercises]);
+    dispatch(getFilterExercises({ search, idx: listIdx }));
+  }, [listIdx, search, exercises]);
+
+  const debouncedFetch = useCallback(
+    debounce((searchQuery: string) => {
+      setSearch(searchQuery);
+    }, 300),
+    [dispatch]
+  );
+
+  useEffect(() => {
+    return () => {
+      debouncedFetch.cancel();
+    };
+  }, [debouncedFetch]);
 
   const onOpen = useCallback((val) => {
     const { id, exerciseIdx, dayIdx } = val;
@@ -71,6 +82,10 @@ function CourseController() {
     }
   };
 
+  const onSearch = (val: string) => {
+    debouncedFetch(val);
+  };
+
   return (
     <div className="">
       <h1 className="">Course Exercises</h1>
@@ -78,10 +93,11 @@ function CourseController() {
       {dayIdx && (
         <EditExercise
           selected={selected}
-          exercises={exerciseList}
+          exercises={filterExercises}
           onClose={handleClose}
           onSelect={onSelect}
           onScroll={handleScroll}
+          onSearch={onSearch}
         />
       )}
     </div>

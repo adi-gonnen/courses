@@ -7,13 +7,11 @@ export const fetchDays = async() => {
     const response = await axios.get(url);
     const courseList = []
     for (const course of response.data) {
-      console.log("course", course)
       const courseUrl = `${url}/${course.uuid}`
       const res = await axios.get(courseUrl)
       courseList.push(res.data)
     }
-    console.log('service', courseList[0] )
-    return courseList[0]  // in this case, got 1 item
+    return courseList 
   } catch (error) {
     console.error('Error fetching days:', error);
     return null
