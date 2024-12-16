@@ -13,6 +13,7 @@ interface ModalProps {
   exercises: ExerciseInput[] | null;
   onSelect: (id: string) => void;
   onClose: () => void;
+  onScroll: () => void;
 }
 
 export default function EditExercise({
@@ -20,8 +21,10 @@ export default function EditExercise({
   selected,
   onClose,
   onSelect,
+  onScroll,
 }: ModalProps) {
   const [id, setId] = useState("");
+
   return (
     <div>
       <Dialog open={true} onClose={onClose} className="select-dialog">
@@ -30,7 +33,7 @@ export default function EditExercise({
           <button onClick={onClose}>X</button>
         </div>
         <DialogContent className="exercise-container">
-          <div className="exercise-body  row wrap">
+          <div className="exercise-body row wrap" onScroll={onScroll}>
             {exercises?.length &&
               exercises.map((exercise) => (
                 <SelectExercise

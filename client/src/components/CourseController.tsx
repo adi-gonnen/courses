@@ -10,11 +10,11 @@ function CourseController() {
   const dispatch = useDispatch<AppDispatch>();
   const { days, exercises } = useSelector((state: RootState) => state.course);
 
-  const [position, setPosition] = useState(0);
   const [listIdx, setListIdx] = useState(0);
   const [selected, setSelected] = useState(null);
   const [selectIdx, setSelectIdx] = useState("");
   const [dayIdx, setDayIdx] = useState("");
+  const [exerciseList, setExerciseList] = useState([]);
 
   useEffect(() => {
     dispatch(getCourses());
@@ -23,6 +23,20 @@ function CourseController() {
   useEffect(() => {
     dispatch(getExercises());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (exercises?.length === exerciseList.length) {
+      return;
+    }
+    if (exercises) {
+      let lastIdx = listIdx + 20;
+      if (lastIdx > exercises.length) {
+        lastIdx = exercises.length;
+      }
+      const sliceList = exercises.slice(listIdx, lastIdx);
+      setExerciseList([...exerciseList, ...sliceList]);
+    }
+  }, [listIdx, exercises]);
 
   const onOpen = useCallback((val) => {
     const { id, exerciseIdx, dayIdx } = val;
@@ -50,6 +64,13 @@ function CourseController() {
     handleClose();
   };
 
+  const handleScroll = (ev) => {
+    const { scrollTop, scrollHeight, clientHeight } = ev.target;
+    if (scrollHeight - scrollTop <= clientHeight + 1) {
+      setListIdx(listIdx + 20);
+    }
+  };
+
   return (
     <div className="">
       <h1 className="">Course Exercises</h1>
@@ -57,9 +78,10 @@ function CourseController() {
       {dayIdx && (
         <EditExercise
           selected={selected}
-          exercises={exercises}
+          exercises={exerciseList}
           onClose={handleClose}
           onSelect={onSelect}
+          onScroll={handleScroll}
         />
       )}
     </div>
