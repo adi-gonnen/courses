@@ -1,53 +1,31 @@
 import { useState, useEffect, useCallback } from "react";
-import { loadDays, loadExercises, updateCourse } from "../services/DataService";
 import { CourseInput, DaysInput, ExerciseInput } from "../services/moduls";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../store/index";
+import { getCourses, getExercises, updateExercise } from "../store/courseSlice";
 import DaysList from "./DaysList";
 import EditExercise from "./EditExerciseModal";
 
 function CourseController() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { days, exercises } = useSelector((state: RootState) => state.course);
+
   const [position, setPosition] = useState(0);
   const [listIdx, setListIdx] = useState(0);
   const [selected, setSelected] = useState(null);
   const [selectIdx, setSelectIdx] = useState("");
   const [dayIdx, setDayIdx] = useState("");
-  const [exercises, setExercises] = useState(null);
-  const [days, setDays] = useState<DaysInput | null>(null);
 
   useEffect(() => {
-    fetchDays();
-  }, []);
+    dispatch(getCourses());
+  }, [dispatch]);
 
   useEffect(() => {
-    fetchExercises();
-  });
-
-  const fetchDays = async () => {
-    try {
-      const response: CourseInput = await loadDays();
-      if (response) {
-        const daysArray = Object.values(response.days).map((day) => {
-          return mapExercises(day);
-        });
-        setDays(daysArray);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchExercises = async () => {
-    try {
-      const response: ExerciseInput[] = await loadExercises();
-      const mapRes = mapExercises([...response]);
-      setExercises(mapRes);
-    } catch (error) {
-      console.error("Error fetching exercises:", error);
-    }
-  };
+    dispatch(getExercises());
+  }, [dispatch]);
 
   const onOpen = useCallback((val) => {
     const { id, exerciseIdx, dayIdx } = val;
-    console.log("exerciseIdx", exerciseIdx, "dayI|Dx: ", dayIdx);
     if (id) {
       setSelected(id);
     }
@@ -68,17 +46,8 @@ function CourseController() {
       insert: true,
       order_in_day: +selectIdx,
     };
-    console.log("data", data);
-    updateCourse(data);
+    dispatch(updateExercise(data));
     handleClose();
-  };
-
-  const mapExercises = (exercises: ExerciseInput[]) => {
-    return exercises?.map((exercise: ExerciseInput) => {
-      const url = exercise.video_url.split(".");
-      url.splice(url.length - 1, 1, "jpg");
-      return { ...exercise, img: url.join(".") };
-    });
   };
 
   return (

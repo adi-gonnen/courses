@@ -19,7 +19,7 @@ export interface ExerciseInput {
     instructions: string[]
 }
 
-export interface UpdateBody {
+export interface UpdateExerciseInput {
     day_number: number,
     exercise_uuid: string,
     insert: boolean,

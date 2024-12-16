@@ -3,7 +3,7 @@ import courseSlice from './courseSlice';
 
 export const store = configureStore({
   reducer: {
-    users: courseSlice
+    course: courseSlice
   },
 });
 

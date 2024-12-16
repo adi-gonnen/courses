@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {UpdateBody} from './moduls'
+import {UpdateExerciseInput, ExerciseInput} from './moduls'
 
 export const fetchDays = async() => {
   try {
@@ -30,12 +30,19 @@ export const fetchExercises = async() => {
   }
 }
 
-export const updateCourse = async(data: UpdateBody) => {
+export const updateCourse = async(courseId: string, data: UpdateExerciseInput) => {
   try {
-    const url = '/api/courses/e71053e5-f2cb-4961-85a2-4117d7a9e9f7/exercises/'
+    const url = `/api/courses/${courseId}/exercises/`
     const response = await axios.put(url, data)
     return response
   } catch(error) {
     console.error('Error update exercise:', error);
   }
 }
+export const mapExercises = (exercises: ExerciseInput[]) => {
+  return exercises?.map((exercise: ExerciseInput) => {
+    const url = exercise.video_url.split(".");
+    url.splice(url.length - 1, 1, "jpg");
+    return { ...exercise, img: url.join(".") };
+  });
+};
