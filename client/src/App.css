@@ -1,0 +1,141 @@
+body {
+  padding: 20px;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.pointer {
+  cursor: pointer;
+}
+.row {
+  display: flex;
+}
+.wrap {
+  flex-wrap: wrap;
+}
+.mb-xs {
+  margin-bottom: 5px;;
+}
+.mb-sm {
+  margin-bottom: 10px;
+}
+.mb-md {
+  margin-bottom: 20px;
+}
+.mb-lg {
+  margin-bottom: 40px;
+}
+.w-full {
+  width: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 40px;
+  line-height: 20px
+}
+
+.days-container {
+  justify-content: space-around;
+  align-items: center;
+}
+
+.day-wrapper {
+  width: 400px;
+  margin: 20px;
+  padding: 10px;
+}
+
+.exercise-wrapper {
+  border: 1px solid #0000001f;
+  width: 400px;
+  height: 150px;
+  align-items: center;
+}
+
+.exercise-img {
+  max-width: 190px;
+}
+.exercise-content {
+  padding: 10px;
+  position: relative;
+  width: 100%;
+}
+.add-btn {
+  position: absolute;
+  top: -20px;
+  height: 40px;
+  font-size: 20px;
+  color: white;
+  border-radius: 50%;
+}
+.update-icon  {
+  align-self: end;
+}
+.exercise-body {
+  padding: 10px;
+  max-height: 70dvh;
+  overflow-y: auto;
+}
+.select-dialog .exercise-container {
+  width: 740px;
+  background-color: white;
+  padding: 0;
+}
+.select-exercise {
+  min-width: 130px;
+  max-width: 130px;
+  height: 200px;
+  margin-right: 10px;
+}
+.select-exercise.selected {
+  border: 1px solid #009688;
+}
+.select-img {
+  min-height: 162px;
+}
+.select-title {
+  font-size: 12px;
+  height: 200px;
+  max-width: 120px;
+  padding: 0 10px
+}
+.MuiPaper-root.MuiDialog-paper {
+  min-width: 750px;
+  max-width: 750px;
+  background-color: #e3e3e3;
+  padding: 20px;
+}
