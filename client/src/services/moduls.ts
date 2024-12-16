@@ -30,3 +30,9 @@ export interface SearchInput {
     search:string,
     idx: number
 }
+
+export interface OpenInput {
+    id?: string,
+    exerciseIdx: string;
+    dayIdx: string
+}

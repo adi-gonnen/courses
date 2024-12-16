@@ -48,7 +48,6 @@ export default memo(function ExerciseItem({
       </div>
       {hover && (
         <IconButton
-          variant="contained"
           sx={{
             backgroundColor: "black",
             color: "white",

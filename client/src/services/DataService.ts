@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {UpdateExerciseInput, ExerciseInput} from './moduls'
+import { UpdateExerciseInput, ExerciseInput } from './moduls'
 
 export const fetchDays = async() => {
   try {

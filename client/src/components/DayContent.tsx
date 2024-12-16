@@ -9,7 +9,7 @@ interface DayProps {
 }
 
 export default memo(function DayContent({ day, idx, onOpen }: DayProps) {
-  const onClick = useCallback((val, index) => {
+  const onClick = useCallback((val) => {
     onOpen({ ...val, dayIdx: idx });
   }, []);
   return (
@@ -20,7 +20,7 @@ export default memo(function DayContent({ day, idx, onOpen }: DayProps) {
           key={exercise.uuid}
           exercise={exercise}
           index={index}
-          onClick={(val) => onClick(val, index)}
+          onClick={onClick}
         />
       ))}
     </div>

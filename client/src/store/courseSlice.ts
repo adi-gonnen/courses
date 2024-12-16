@@ -46,24 +46,16 @@ const courseSlice = createSlice({
       const { search, idx} = action.payload;
       const fullList = state.exercises;
       const currentList = state.filterExercises;
-      if (!fullList?.length) {
+      if (!fullList?.length || fullList.length === currentList.length) {
         return
       }
-      if (fullList.length === currentList.length) {
-        return
-      }
-      // if (currentList.length && idx === 0 && !search) {
-      //   return
-      // }
       let lastIdx = idx;
       if (idx > fullList.length) {
         lastIdx = fullList.length;
       }
-      const filterList = search ? fullList.filter((item) => item.title.startsWith(search)) : fullList;
-      console.log('search', filterList.length)
+      const filterList = fullList.filter((item) => item.title.startsWith(search)) 
       const extractList = filterList.slice(0, lastIdx)
-        state.filterExercises = [...extractList]
-        // state.filterExercises = [...currentList, ...extractList]
+      state.filterExercises = [...extractList]
     },
   },
   extraReducers: (builder) => {
@@ -81,11 +73,10 @@ const courseSlice = createSlice({
         state.courseId = result.uuid;
         const mapResults = mapExercises(result);
         state.exercises = [...mapResults]
-        console.log('init exe')
       }) 
       .addCase(updateExercise.fulfilled, (state, action) => {
         const result = action.payload;
-        console.log('update', result)
+        console.log('update result', result)
       })
   },
 });

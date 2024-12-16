@@ -1,14 +1,10 @@
-import { useState, memo } from "react";
+import { memo } from "react";
 import { ExerciseInput } from "../services/moduls";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
-import CachedIcon from "@mui/icons-material/Cached";
-import IconButton from "@mui/material/IconButton";
-import AddIcon from "@mui/icons-material/Add";
 
 interface ExerciseProps {
   exercise: ExerciseInput;
-  index: number;
   isSelected: boolean;
   onClick: (id: string) => void;
 }

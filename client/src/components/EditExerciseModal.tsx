@@ -10,9 +10,9 @@ import SelectExercise from "./SelectExercise";
 interface ModalProps {
   selected: string;
   exercises: ExerciseInput[] | null;
-  onSelect: (id: string) => void;
   onClose: () => void;
-  onScroll: () => void;
+  onSelect: (id: string) => void;
+  onScroll: (ev: React.ChangeEvent) => void;
   onSearch: (val: string) => void;
 }
 

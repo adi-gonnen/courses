@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { CourseInput, DaysInput, ExerciseInput } from "../services/moduls";
 import { useSelector, useDispatch } from "react-redux";
+import { OpenInput } from "../services/moduls";
 import { RootState, AppDispatch } from "../store/index";
 import {
   getCourses,
@@ -19,24 +19,28 @@ function CourseController() {
   );
 
   const [listIdx, setListIdx] = useState(20);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState("");
   const [selectIdx, setSelectIdx] = useState("");
   const [dayIdx, setDayIdx] = useState("");
   const [search, setSearch] = useState("");
 
   useEffect(() => {
+    // load course plan
     dispatch(getCourses());
   }, [dispatch]);
 
   useEffect(() => {
+    // load full exercise list
     dispatch(getExercises());
   }, [dispatch]);
 
   useEffect(() => {
+    // get exercise by idx and search input
     dispatch(getFilterExercises({ search, idx: listIdx }));
   }, [listIdx, search, exercises]);
 
   const debouncedFetch = useCallback(
+    // wait 300ms after typing, before call
     debounce((searchQuery: string) => {
       setSearch(searchQuery);
     }, 300),
@@ -49,17 +53,19 @@ function CourseController() {
     };
   }, [debouncedFetch]);
 
-  const onOpen = useCallback((val) => {
+  const onOpen = useCallback((val: OpenInput) => {
     const { id, exerciseIdx, dayIdx } = val;
     if (id) {
+      // replace case
       setSelected(id);
     }
+    // keep dayIdx and exercise idx for both cases
     setSelectIdx(`${exerciseIdx}`);
     setDayIdx(`${dayIdx}`);
   }, []);
 
   const handleClose = () => {
-    setSelected(null);
+    setSelected("");
     setSelectIdx("");
     setDayIdx("");
   };
@@ -75,8 +81,9 @@ function CourseController() {
     handleClose();
   };
 
-  const handleScroll = (ev) => {
+  const handleScroll = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = ev.target;
+    // load more only if reach bottom
     if (scrollHeight - scrollTop <= clientHeight + 1) {
       setListIdx(listIdx + 20);
     }

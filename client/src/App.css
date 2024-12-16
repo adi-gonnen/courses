@@ -107,6 +107,7 @@ p {
 }
 .exercise-body {
   max-height: 70dvh;
+  min-height: 70dvh;
   overflow-y: auto;
 }
 .select-dialog .exercise-container {
