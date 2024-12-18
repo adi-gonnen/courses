@@ -1,4 +1,4 @@
-import { useState, forwardRef } from "react";
+import { useState, useCallback, forwardRef } from "react";
 import { ExerciseInput, Status } from "../services/moduls";
 import {
   Dialog,
@@ -16,7 +16,7 @@ interface ModalProps {
   error: string | null;
   exercises: ExerciseInput[] | null;
   onClose: () => void;
-  onSelect: (id: string) => void;
+  onSelect: (id: string, done: (err: string) => void) => void;
   onScroll: (ev: React.ChangeEvent) => void;
   onSearch: (val: string) => void;
 }
@@ -33,14 +33,25 @@ const Transition = forwardRef(function Transition(
 export default function EditExercise({
   exercises,
   selected,
-  error,
   onClose,
   onSelect,
   onScroll,
   onSearch,
 }: ModalProps) {
   const [id, setId] = useState("");
+  const [error, setError] = useState("");
 
+  const handleSelect = useCallback(() => {
+    const done = (error: string) => {
+      setError(error);
+    };
+    onSelect(id, done);
+  }, []);
+
+  const onClick = (id: string) => {
+    setId(id);
+    setError("");
+  };
   return (
     <div className="slide-in">
       <Dialog
@@ -70,22 +81,14 @@ export default function EditExercise({
                   key={exercise.uuid}
                   exercise={exercise}
                   isSelected={id === exercise.uuid}
-                  onClick={(id) => setId(id)}
+                  onClick={(id) => onClick(id)}
                 />
               ))}
           </div>
         </DialogContent>
         <DialogActions className="row justify-between">
-          {error === Status.UPDATE ? (
-            <p className="error-text">Error! Data was not saved</p>
-          ) : (
-            <div />
-          )}
-          <Button
-            disabled={!id}
-            variant="contained"
-            onClick={() => onSelect(id)}
-          >
+          <p className="error-text">{error}</p>
+          <Button disabled={!id} variant="contained" onClick={handleSelect}>
             {selected ? "Replace" : "Add"}
           </Button>
         </DialogActions>

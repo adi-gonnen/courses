@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { OpenInput } from "../services/moduls";
 import { RootState, AppDispatch } from "../store/index";
+import {} from "@mui/material";
 import {
   setError,
   getCourses,
@@ -15,7 +16,7 @@ import { debounce } from "lodash";
 
 function CourseController() {
   const dispatch = useDispatch<AppDispatch>();
-  const { days, exercises, filterExercises, error } = useSelector(
+  const { days, exercises, filterExercises } = useSelector(
     (state: RootState) => state.course
   );
 
@@ -71,18 +72,23 @@ function CourseController() {
     setDayIdx("");
     dispatch(setError(null));
     setSearch("");
-    // setListIdx(20);
   };
 
-  const onSelect = (id: string) => {
+  const onSelect = async (id: string, done: () => void) => {
     const data = {
       day_number: +dayIdx,
       exercise_uuid: id,
       insert: true,
       order_in_day: +selectIdx,
     };
-    dispatch(updateExercise(data));
-    // handleClose();
+    const result = await dispatch(updateExercise(data)).unwrap();
+    if (result.error) {
+      // show error locally in case of failed
+      done(result.error);
+    } else {
+      // close dialog in case of success
+      handleClose();
+    }
   };
 
   const handleScroll = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +112,6 @@ function CourseController() {
         <EditExercise
           selected={selected}
           exercises={filterExercises}
-          error={error}
           onClose={handleClose}
           onSelect={onSelect}
           onScroll={handleScroll}

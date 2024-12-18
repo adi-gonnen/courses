@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { UpdateExerciseInput, ExerciseInput } from './moduls'
+import { UpdateExerciseInput, ExerciseInput, ErrorMessages } from './moduls'
 
 export const fetchDays = async() => {
   try {
@@ -36,7 +36,7 @@ export const updateCourse = async(courseId: string, data: UpdateExerciseInput) =
     return response
   } catch(error) {
     console.error('Error update exercise:', error);
-    return {error}
+    return {error: ErrorMessages.UPDATE}
   }
 }
 

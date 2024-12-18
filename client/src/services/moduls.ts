@@ -42,3 +42,9 @@ export enum Status {
     EXERCISES = "exercise",
     UPDATE = "update"
 }
+
+export enum ErrorMessages {
+    UPDATE= "Error: data was not saved",
+    COURSE= "Error: no course could be displayed",
+    EXERCISES = "Error: no exercises could be displayed"
+}

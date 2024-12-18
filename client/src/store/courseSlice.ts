@@ -1,5 +1,5 @@
 import { fetchDays, fetchExercises,  updateCourse, mapExercises } from '../services/DataService'
-import { CourseInput, ExerciseInput, UpdateExerciseInput, SearchInput, Status } from "../services/moduls";
+import { CourseInput, ExerciseInput, UpdateExerciseInput, SearchInput } from "../services/moduls";
 import {RootState} from './index'
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
@@ -9,7 +9,6 @@ interface CourseState {
   exercises: ExerciseInput[] | null;
   filterExercises: ExerciseInput[] | [];
   init: boolean
-  error: string | null
   status: string
 }
 
@@ -19,7 +18,6 @@ const initialState: CourseState = {
     exercises: null,
     filterExercises: [],
     init: true,
-    error: null,
     status: ''
 };
 
@@ -38,7 +36,7 @@ export const updateExercise = createAsyncThunk('course/updateCourse', async (dat
     const state = getState() as RootState;
     const courseId = state.course.courseId;
     const response = await updateCourse(courseId, data);
-    return response;
+    return response
   }
 );
 
@@ -80,12 +78,6 @@ const courseSlice = createSlice({
         state.courseId = result.uuid;
         const mapResults = mapExercises(result);
         state.exercises = [...mapResults]
-      }) 
-      .addCase(updateExercise.fulfilled, (state, action) => {
-        const result = action.payload;
-        if (result.error) {
-          state.error = Status.UPDATE;
-        }
       }) 
   },
 });
