@@ -1,8 +1,7 @@
 import { useState, memo } from "react";
 import { ExerciseInput } from "../services/moduls";
-import CardMedia from "@mui/material/CardMedia";
+import { CardMedia, IconButton } from "@mui/material";
 import CachedIcon from "@mui/icons-material/Cached";
-import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 
 interface ExerciseProps {

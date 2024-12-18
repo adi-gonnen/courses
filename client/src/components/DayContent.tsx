@@ -9,7 +9,7 @@ interface DayProps {
 }
 
 export default memo(function DayContent({ day, idx, onOpen }: DayProps) {
-  const onClick = useCallback((val) => {
+  const onClick = useCallback((val: { id?: string; exerciseIdx?: number }) => {
     onOpen({ ...val, dayIdx: idx });
   }, []);
   return (

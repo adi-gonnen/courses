@@ -1,14 +1,19 @@
-import { useState } from "react";
-import { ExerciseInput } from "../services/moduls";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import { useState, forwardRef } from "react";
+import { ExerciseInput, Status } from "../services/moduls";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  TextField,
+  Button,
+  Slide,
+} from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
 import SelectExercise from "./SelectExercise";
 
 interface ModalProps {
   selected: string;
+  error: string | null;
   exercises: ExerciseInput[] | null;
   onClose: () => void;
   onSelect: (id: string) => void;
@@ -16,9 +21,19 @@ interface ModalProps {
   onSearch: (val: string) => void;
 }
 
+const Transition = forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement;
+  },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="left" ref={ref} {...props} />;
+});
+
 export default function EditExercise({
   exercises,
   selected,
+  error,
   onClose,
   onSelect,
   onScroll,
@@ -27,8 +42,14 @@ export default function EditExercise({
   const [id, setId] = useState("");
 
   return (
-    <div>
-      <Dialog open={true} onClose={onClose} className="select-dialog">
+    <div className="slide-in">
+      <Dialog
+        open={true}
+        onClose={onClose}
+        TransitionComponent={Transition}
+        keepMounted
+        className="select-dialog"
+      >
         <div className="dialog-title row justify-between mb-sm">
           <p>Exercise List</p>
           <Button onClick={onClose}>X</Button>
@@ -54,7 +75,12 @@ export default function EditExercise({
               ))}
           </div>
         </DialogContent>
-        <DialogActions>
+        <DialogActions className="row justify-between">
+          {error === Status.UPDATE ? (
+            <p className="error-text">Error! Data was not saved</p>
+          ) : (
+            <div />
+          )}
           <Button
             disabled={!id}
             variant="contained"

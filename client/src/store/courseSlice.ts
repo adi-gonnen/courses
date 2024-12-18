@@ -1,5 +1,5 @@
 import { fetchDays, fetchExercises,  updateCourse, mapExercises } from '../services/DataService'
-import { CourseInput, ExerciseInput, UpdateExerciseInput, SearchInput } from "../services/moduls";
+import { CourseInput, ExerciseInput, UpdateExerciseInput, SearchInput, Status } from "../services/moduls";
 import {RootState} from './index'
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
@@ -9,6 +9,8 @@ interface CourseState {
   exercises: ExerciseInput[] | null;
   filterExercises: ExerciseInput[] | [];
   init: boolean
+  error: string | null
+  status: string
 }
 
 const initialState: CourseState = {
@@ -16,7 +18,9 @@ const initialState: CourseState = {
     days: null,
     exercises: null,
     filterExercises: [],
-    init: true
+    init: true,
+    error: null,
+    status: ''
 };
 
 export const getCourses = createAsyncThunk('course/fetchDays', async () => {
@@ -42,6 +46,9 @@ const courseSlice = createSlice({
   name: 'course',
   initialState,
   reducers: {
+    setError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload
+    },
     getFilterExercises: (state, action: PayloadAction<SearchInput>) => {
       const { search, idx} = action.payload;
       const fullList = state.exercises;
@@ -64,9 +71,9 @@ const courseSlice = createSlice({
         const result = action.payload;
         state.courseId = result.uuid; 
         const dataArray = Object.values(result.days).map((day) => {
-            return mapExercises(day);
-          });
-       state.days = [...dataArray]
+          return mapExercises(day);
+        });
+        state.days = [...dataArray]
       }) 
       .addCase(getExercises.fulfilled, (state, action) => {
         const result = action.payload;
@@ -76,11 +83,13 @@ const courseSlice = createSlice({
       }) 
       .addCase(updateExercise.fulfilled, (state, action) => {
         const result = action.payload;
-        console.log('update result', result)
-      })
+        if (result.error) {
+          state.error = Status.UPDATE;
+        }
+      }) 
   },
 });
 
-export const { getFilterExercises } = courseSlice.actions;
+export const { getFilterExercises, setError } = courseSlice.actions;
 export default courseSlice.reducer;
 export const selectUser = (state: RootState) => state.course

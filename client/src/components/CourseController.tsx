@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { OpenInput } from "../services/moduls";
 import { RootState, AppDispatch } from "../store/index";
 import {
+  setError,
   getCourses,
   getExercises,
   updateExercise,
@@ -14,7 +15,7 @@ import { debounce } from "lodash";
 
 function CourseController() {
   const dispatch = useDispatch<AppDispatch>();
-  const { days, exercises, filterExercises } = useSelector(
+  const { days, exercises, filterExercises, error } = useSelector(
     (state: RootState) => state.course
   );
 
@@ -68,6 +69,9 @@ function CourseController() {
     setSelected("");
     setSelectIdx("");
     setDayIdx("");
+    dispatch(setError(null));
+    setSearch("");
+    // setListIdx(20);
   };
 
   const onSelect = (id: string) => {
@@ -78,7 +82,7 @@ function CourseController() {
       order_in_day: +selectIdx,
     };
     dispatch(updateExercise(data));
-    handleClose();
+    // handleClose();
   };
 
   const handleScroll = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,6 +95,7 @@ function CourseController() {
 
   const onSearch = (val: string) => {
     debouncedFetch(val);
+    dispatch(setError(null));
   };
 
   return (
@@ -101,6 +106,7 @@ function CourseController() {
         <EditExercise
           selected={selected}
           exercises={filterExercises}
+          error={error}
           onClose={handleClose}
           onSelect={onSelect}
           onScroll={handleScroll}

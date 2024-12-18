@@ -110,12 +110,17 @@ p {
   min-height: 70dvh;
   overflow-y: auto;
 }
-.select-dialog .exercise-container {
-  width: 735px;
-  background-color: white;
-  padding: 10px;
-  & .search-input {
-    margin-bottom: 20px;
+.select-dialog {
+  & .MuiDialog-container {
+    justify-content: flex-end;
+  }
+  & .exercise-container {
+    width: 735px;
+    background-color: white;
+    padding: 10px;
+    & .search-input {
+      margin-bottom: 20px;
+    }
   }
 }
 .select-exercise {
@@ -141,4 +146,9 @@ p {
   max-width: 755px;
   background-color: #e3e3e3;
   padding: 20px;
+  margin: 0;
 }
+.error-test {
+  color: red;
+}
+

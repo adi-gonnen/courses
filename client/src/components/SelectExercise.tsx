@@ -1,7 +1,6 @@
 import { memo } from "react";
 import { ExerciseInput } from "../services/moduls";
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
+import { Card, CardMedia } from "@mui/material";
 
 interface ExerciseProps {
   exercise: ExerciseInput;
