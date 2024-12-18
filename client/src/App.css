@@ -129,8 +129,11 @@ p {
   height: 200px;
   margin-right: 10px;
 }
-.select-exercise.selected {
-  border: 1px solid #009688;
+.select-exercise {
+  border: 2px solid transparent;
+  &.selected {
+    border-color: #009688
+  }
 }
 .select-img {
   min-height: 162px;

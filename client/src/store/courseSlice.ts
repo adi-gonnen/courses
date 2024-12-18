@@ -48,9 +48,11 @@ const courseSlice = createSlice({
       const fullList = state.exercises;
       const currentList = state.filterExercises;
       if (!fullList?.length) {
+        // cae no exercises to look for
         return 
       }
       if (!search && fullList.length === currentList.length) {
+        // load max items, no search mode 
         return
       }
       let lastIdx = idx;
@@ -77,7 +79,7 @@ const courseSlice = createSlice({
       .addCase(getExercises.fulfilled, (state, action) => {
         const result = action.payload;
         if (!result?.error) {
-          const mapResults = mapExercises(result);
+          const mapResults = mapExercises(result).sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: 'base' }));
           state.exercises = [...mapResults]
         }
       }) 

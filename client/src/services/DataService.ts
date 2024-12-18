@@ -37,7 +37,7 @@ export const updateCourse = async(courseId: string, data: UpdateExerciseInput) =
         'Content-Type': 'application/json'
       }
     });
-    return response
+    return response.data
   } catch(error) {
     console.error('Error update exercise:', error);
     return {error: ErrorMessages.UPDATE}
