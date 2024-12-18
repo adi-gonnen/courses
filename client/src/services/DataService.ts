@@ -31,8 +31,12 @@ export const fetchExercises = async() => {
 
 export const updateCourse = async(courseId: string, data: UpdateExerciseInput) => {
   try {
-    const url = `/courses/${courseId}/exercises/`
-    const response = await axios.put(url, data)
+    const url = `/api/courses/${courseId}/exercises`
+    const response = await axios.put(url, data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
     return response
   } catch(error) {
     console.error('Error update exercise:', error);

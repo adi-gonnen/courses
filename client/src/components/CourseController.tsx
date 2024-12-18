@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { OpenInput } from "../services/moduls";
+import { ErrorMessages, OpenInput } from "../services/moduls";
 import { RootState, AppDispatch } from "../store/index";
-import {} from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import {
-  setError,
   getCourses,
   getExercises,
   updateExercise,
@@ -16,7 +15,7 @@ import { debounce } from "lodash";
 
 function CourseController() {
   const dispatch = useDispatch<AppDispatch>();
-  const { days, exercises, filterExercises } = useSelector(
+  const { days, exercises, filterExercises, loading } = useSelector(
     (state: RootState) => state.course
   );
 
@@ -28,8 +27,10 @@ function CourseController() {
 
   useEffect(() => {
     // load course plan
-    dispatch(getCourses());
-  }, [dispatch]);
+    if (!loading) {
+      dispatch(getCourses());
+    }
+  }, [dispatch, loading]);
 
   useEffect(() => {
     // load full exercise list
@@ -70,15 +71,14 @@ function CourseController() {
     setSelected("");
     setSelectIdx("");
     setDayIdx("");
-    dispatch(setError(null));
     setSearch("");
   };
 
-  const onSelect = async (id: string, done: () => void) => {
+  const onSelect = async (id: string, done: (val: string) => void) => {
     const data = {
       day_number: +dayIdx,
       exercise_uuid: id,
-      insert: true,
+      insert: !selected,
       order_in_day: +selectIdx,
     };
     const result = await dispatch(updateExercise(data)).unwrap();
@@ -91,7 +91,7 @@ function CourseController() {
     }
   };
 
-  const handleScroll = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const handleScroll = (ev: React.UIEvent<HTMLElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = ev.target;
     // load more only if reach bottom
     if (scrollHeight - scrollTop <= clientHeight + 1) {
@@ -101,15 +101,15 @@ function CourseController() {
 
   const onSearch = (val: string) => {
     debouncedFetch(val);
-    dispatch(setError(null));
   };
 
   return (
     <div className="">
       <h1 className="">Course Exercises</h1>
-      {days ? <DaysList days={days} onOpen={onOpen} /> : <p>...loading</p>}
+      {days ? <DaysList days={days} onOpen={onOpen} /> : <CircularProgress />}
       {dayIdx && (
         <EditExercise
+          loading={loading}
           selected={selected}
           exercises={filterExercises}
           onClose={handleClose}

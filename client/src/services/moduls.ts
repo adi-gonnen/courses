@@ -37,6 +37,11 @@ export interface OpenInput {
     dayIdx: string
 }
 
+export interface Result {
+    error? : string;
+    success?: string;
+}
+
 export enum Status {
     COURSE = "course",
     EXERCISES = "exercise",

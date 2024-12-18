@@ -1,5 +1,5 @@
 import { useState, useCallback, forwardRef } from "react";
-import { ExerciseInput, Status } from "../services/moduls";
+import { ExerciseInput } from "../services/moduls";
 import {
   Dialog,
   DialogActions,
@@ -8,16 +8,17 @@ import {
   Button,
   Slide,
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { TransitionProps } from "@mui/material/transitions";
 import SelectExercise from "./SelectExercise";
 
 interface ModalProps {
   selected: string;
-  error: string | null;
+  loading: boolean;
   exercises: ExerciseInput[] | null;
   onClose: () => void;
   onSelect: (id: string, done: (err: string) => void) => void;
-  onScroll: (ev: React.ChangeEvent) => void;
+  onScroll: (ev: React.UIEvent<HTMLElement>) => void;
   onSearch: (val: string) => void;
 }
 
@@ -33,6 +34,7 @@ const Transition = forwardRef(function Transition(
 export default function EditExercise({
   exercises,
   selected,
+  loading,
   onClose,
   onSelect,
   onScroll,
@@ -46,7 +48,7 @@ export default function EditExercise({
       setError(error);
     };
     onSelect(id, done);
-  }, []);
+  }, [id]);
 
   const onClick = (id: string) => {
     setId(id);
@@ -74,23 +76,31 @@ export default function EditExercise({
               onSearch(event.target.value);
             }}
           />
-          <div className="exercise-body row wrap" onScroll={onScroll}>
+          <div
+            className="exercise-body row wrap"
+            onScroll={(ev: React.UIEvent<HTMLElement>) => onScroll(ev)}
+          >
             {exercises?.length &&
               exercises.map((exercise) => (
                 <SelectExercise
                   key={exercise.uuid}
                   exercise={exercise}
                   isSelected={id === exercise.uuid}
-                  onClick={(id) => onClick(id)}
+                  onClick={onClick}
                 />
               ))}
           </div>
         </DialogContent>
         <DialogActions className="row justify-between">
           <p className="error-text">{error}</p>
-          <Button disabled={!id} variant="contained" onClick={handleSelect}>
+          <LoadingButton
+            loading={loading}
+            disabled={!id}
+            variant="contained"
+            onClick={handleSelect}
+          >
             {selected ? "Replace" : "Add"}
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </div>

@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { ExerciseInput } from "../services/moduls";
 import { Card, CardMedia } from "@mui/material";
 
@@ -12,9 +12,9 @@ export default memo(function ExerciseItem({
   isSelected,
   onClick,
 }: ExerciseProps) {
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     onClick(exercise.uuid);
-  };
+  }, []);
 
   return (
     <Card
