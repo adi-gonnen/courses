@@ -25,37 +25,39 @@ function CourseController() {
   const [dayIdx, setDayIdx] = useState("");
   const [search, setSearch] = useState("");
 
+  // load course plan
   useEffect(() => {
-    // load course plan
     if (!loading) {
       dispatch(getCourses());
     }
   }, [dispatch, loading]);
 
+  // load full exercise list, only once
   useEffect(() => {
-    // load full exercise list
     dispatch(getExercises());
   }, [dispatch]);
 
+  // get filter exercises by idx and search input
   useEffect(() => {
-    // get exercise by idx and search input
     dispatch(getFilterExercises({ search, idx: listIdx }));
   }, [listIdx, search, exercises]);
 
+  // wait 300ms after typing, before call
   const debouncedFetch = useCallback(
-    // wait 300ms after typing, before call
     debounce((searchQuery: string) => {
       setSearch(searchQuery);
     }, 300),
     [dispatch]
   );
 
+  // cancel debounce when unmount
   useEffect(() => {
     return () => {
       debouncedFetch.cancel();
     };
   }, [debouncedFetch]);
 
+  // open dialog (add or replace) and keep selected params
   const onOpen = useCallback((val: OpenInput) => {
     const { id, exerciseIdx, dayIdx } = val;
     if (id) {
@@ -67,6 +69,7 @@ function CourseController() {
     setDayIdx(`${dayIdx}`);
   }, []);
 
+  // close dialog and reset params
   const handleClose = () => {
     setSelected("");
     setSelectIdx("");
@@ -74,6 +77,7 @@ function CourseController() {
     setSearch("");
   };
 
+  // select exercise from dialog and add/replace it
   const onSelect = async (id: string, done: (val: string) => void) => {
     const data = {
       day_number: +dayIdx,
@@ -83,7 +87,7 @@ function CourseController() {
     };
     const result = await dispatch(updateExercise(data)).unwrap();
     if (result.error) {
-      // show error locally in case of failed
+      // show error locally in case of failure
       done(result.error);
     } else {
       // close dialog in case of success
@@ -91,11 +95,12 @@ function CourseController() {
     }
   };
 
+  // scroll exercises list
   const handleScroll = (ev: React.UIEvent<HTMLElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = ev.target;
     // load more only if reach bottom
     if (scrollHeight - scrollTop <= clientHeight + 1) {
-      setListIdx(listIdx + 20);
+      setListIdx((prevVal) => prevVal + 20);
     }
   };
 
@@ -104,7 +109,7 @@ function CourseController() {
   };
 
   return (
-    <div className="">
+    <div>
       <h1 className="">Course Exercises</h1>
       {days ? <DaysList days={days} onOpen={onOpen} /> : <CircularProgress />}
       {dayIdx && (

@@ -1,7 +1,7 @@
 import { fetchDays, fetchExercises,  updateCourse, mapExercises } from '../services/DataService'
 import { DayInput, ExerciseInput, UpdateExerciseInput, SearchInput } from "../services/moduls";
-import {RootState} from './index'
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from './index'
 
 interface CourseState {
   courseId: string;
@@ -21,7 +21,7 @@ const initialState: CourseState = {
 
 export const getCourses = createAsyncThunk('course/fetchDays', async () => {
     const response = await fetchDays();
-    return response[0];   // in this case, got 1 item
+    return response && response[0];   // in this case, got 1 item
   }
 );
 export const getExercises = createAsyncThunk('course/fetchExercises', async () => {
@@ -46,12 +46,11 @@ const courseSlice = createSlice({
     getFilterExercises: (state, action: PayloadAction<SearchInput>) => {
       const { search, idx} = action.payload;
       const fullList = state.exercises;
-      const currentList = state.filterExercises;
       if (!fullList?.length) {
-        // cae no exercises to look for
+        // case no exercises to look for
         return 
       }
-      if (!search && fullList.length === currentList.length) {
+      if (!search && fullList.length === state.filterExercises.length) {
         // load max items, no search mode 
         return
       }

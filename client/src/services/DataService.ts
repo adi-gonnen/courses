@@ -44,7 +44,7 @@ export const updateCourse = async(courseId: string, data: UpdateExerciseInput) =
   }
 }
 
-// add image url ends with jpg
+// add image url with .jpg
 export const mapExercises = (exercises: ExerciseInput[]) => {
   return exercises?.map((exercise: ExerciseInput) => {
     const url = exercise.video_url.split(".");

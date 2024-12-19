@@ -21,7 +21,7 @@ export default memo(function ExerciseItem({
   };
 
   const handleAddClick = () => {
-    onClick({ exerciseIdx: index + 1 });
+    onClick({ exerciseIdx: index + 2 }); // order_in_day starts with 1, not 0
   };
   return (
     <div
